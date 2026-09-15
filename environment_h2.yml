@@ -1,0 +1,21 @@
+name: h2-model
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python=3.11
+  - numpy>=2.0
+  - pandas>=2.2
+  - scipy>=1.13
+  - matplotlib>=3.8
+  - xarray>=2024.1
+  - openpyxl>=3.1
+  - pytest>=8
+  - spyder-kernels=3.0
+  - pip
+  - pip:
+      - pvlib>=0.11
+      - windpowerlib==0.2.2
+      - pycountry>=24
+      - gurobipy>=13

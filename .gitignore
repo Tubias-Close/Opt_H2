@@ -11,6 +11,7 @@ figures_sensitivity
 export
 archive
 data
+outputs_h2/
 main_euler.py
 optimize_ammonia.slurm
 input_data/lcoe_Liu_et_al_2025.xlsx
@@ -21,3 +22,4 @@ input_data/ghg_factors_future.json
 .vscode
 .ipynb_checkpoints
 unlinked.log
+~$*

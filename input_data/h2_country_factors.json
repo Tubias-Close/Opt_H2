@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "countries": {
+    "NA": {
+      "country_name": "Namibia",
+      "grid_emission_factor_kg_co2e_per_mwh": 220.0,
+      "data_year": 2024,
+      "source_name": "Electricity Control Board of Namibia, Integrated Annual Report 2025, energy/electricity balance",
+      "source_url": "https://www.ecb.org.na/wp-content/uploads/2025/12/ECB_IAR_2025_web.pdf",
+      "note": "Landesweiter Total Grid Emissions Factor von 0.22 kg CO2e/kWh, umgerechnet in 220 kg CO2e/MWh."
+    }
+  }
+}

@@ -22,8 +22,8 @@ def pv_profile_generator_tmy(weather_data, latitude: float, longitude: float,
         total_profile_tmy (dataframe): the PV profile per kWp panel modelled, for a TMY.
     """
     
-    # Assuming that panels are oriented to the south with angle of 35 deg to surface
-    sa = 180 #Surface azimuth angle, 180 (south), 270(west), 90(east)
+    # Equator-facing modules: south in the northern and north in the southern hemisphere.
+    sa = 180 if float(latitude) >= 0 else 0
     st = 35 #angle the roof makes with the surface, assumed to be 35 degrees
     
     # If TMY, delete first substrings from rows to avoid inconsitencies
@@ -112,9 +112,14 @@ def wind_profile_generator_tmy(weather_data, turbine_spec="E-126/4200", hub_heig
         total_profile (dataframe): the wind profile per kWp turbine modelled, for a TMY.
     """
     
-    df = pd.DataFrame(data=[], 
-                  index = pd.date_range('1/1/{} 00:00'.format(assessment_year), periods=8760, freq='h'), 
-                 columns=np.arange(0,5))
+    if not isinstance(weather_data, pd.DataFrame) or weather_data.empty:
+        raise ValueError("weather_data must be a non-empty pandas DataFrame")
+    required_columns = {"temp_air", "wind_speed", "pressure"}
+    missing_columns = required_columns - set(weather_data.columns)
+    if missing_columns:
+        raise ValueError(f"Missing wind weather columns: {sorted(missing_columns)}")
+
+    df = pd.DataFrame(data=[], index=weather_data.index.copy(), columns=np.arange(0,5))
     df.columns = [
         ['pressure','temperature','wind_speed','roughness_length','temperature'],
         [0, 2, 10, 0, 10]]
@@ -136,8 +141,8 @@ def wind_profile_generator_tmy(weather_data, turbine_spec="E-126/4200", hub_heig
     df['roughness_length', 0] = get_roughness_length(overseas=offshore)
     df['pressure', 0] = weather_data.pressure
     
-    # Forward fill in case empty or NaN values
-    df.ffill(inplace=True)
+    if df.isna().any().any():
+        raise ValueError("Wind weather data contain missing or misaligned values")
 
     # specification of wind turbine where power curve is provided in the
     # oedb turbine library
@@ -215,20 +220,25 @@ class RenewableEnergyProcessor:
         try:
             all_data = pvlib.iotools.get_pvgis_tmy(
                 float(self.lat), float(self.lon),
-                startyear=start_year, endyear=end_year
+                startyear=start_year, endyear=end_year,
+                map_variables=True, coerce_year=2025,
             )
         except Exception as e:
             warnings.warn(f"PVGIS data fetch failed for ({self.lat}, {self.lon}): {e}")
             return np.nan, np.nan
 
         # Validate output structures
-        if not isinstance(all_data, (tuple, list)) or len(all_data) < 3:
+        if not isinstance(all_data, (tuple, list)) or len(all_data) not in (2, 4):
             warnings.warn(f"Unexpected PVGIS output format for ({self.lat}, {self.lon}). Got type {type(all_data)}")
             return np.nan, np.nan
 
         try:
-            elevation = all_data[2]['location']['elevation']
             data = all_data[0]
+            if len(all_data) == 2:
+                metadata = all_data[1]
+                elevation = metadata.get('inputs', {}).get('location', {}).get('elevation', np.nan)
+            else:
+                elevation = all_data[2]['location']['elevation']
         except Exception as e:
             warnings.warn(f"Could not parse PVGIS data for ({self.lat}, {self.lon}): {e}")
             return np.nan, np.nan
@@ -239,21 +249,15 @@ class RenewableEnergyProcessor:
             return np.nan, np.nan
 
         # Check required columns
-        required_cols = {'temp_air', 'ghi', 'dni', 'dhi', 'wind_speed'}
+        required_cols = {'temp_air', 'ghi', 'dni', 'dhi', 'wind_speed', 'pressure'}
         missing_cols = required_cols - set(data.columns)
         if missing_cols:
             warnings.warn(f"Missing columns {missing_cols} in PVGIS data for ({self.lat}, {self.lon}).")
             return np.nan, np.nan
 
         # ---- Normalization and cleaning ----
-        data = data.reset_index()
-        data['time(UTC)'] = data['time(UTC)'].astype(str)
-        data['time(UTC)'] = data['time(UTC)'].str[:-9]
-        data['time(UTC)'] = data['time(UTC)'].apply(lambda x: str(2025) + x[4:])
-        data['time(UTC)'] = data['time(UTC)'].apply(
-            lambda x: dt.datetime.strptime(str(x), '%Y-%m-%d %H:%M')
-        )
-        data = data.set_index('time(UTC)')
+        data = data.copy()
+        data.index = pd.to_datetime(data.index, utc=True).tz_localize(None)
 
         for col in ['ghi', 'dni', 'dhi']:
             data[col] = data[col].fillna(0)

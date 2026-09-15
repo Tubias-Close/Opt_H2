@@ -1,0 +1,17 @@
+case_id,parameter,level,label,value,unit,source,note
+baseline,baseline,base,Basisfall,,-,Brandt et al. (2024) und dokumentierte Namibia-Fallstudie,Keine Änderung gegenüber dem Namibia-Basisfall
+electricity_price_low,electricity_price_eur_per_mwh,low,Strompreis 50 Prozent,64,EUR_2023/MWh,Methodische Sensitivität dieser Forschungsarbeit,50 Prozent des Namibia-Basiswerts von 128 EUR/MWh
+electricity_price_high,electricity_price_eur_per_mwh,high,Strompreis 150 Prozent,192,EUR_2023/MWh,Methodische Sensitivität dieser Forschungsarbeit,150 Prozent des Namibia-Basiswerts von 128 EUR/MWh
+electrolyzer_capex_low,electrolyzer_capex_eur_per_kw,low,Elektrolyseur-CAPEX minus 25 Prozent,972.75,EUR_2023/kW,Methodische Sensitivität auf Basis von Brandt et al. (2024),75 Prozent des Basiswerts von 1297 EUR/kW
+electrolyzer_capex_high,electrolyzer_capex_eur_per_kw,high,Elektrolyseur-CAPEX plus 25 Prozent,1621.25,EUR_2023/kW,Methodische Sensitivität auf Basis von Brandt et al. (2024),125 Prozent des Basiswerts von 1297 EUR/kW
+electrolyzer_energy_low,electrolyzer_specific_electricity_kwh_per_kg_h2,low,Elektrolyseur-Strombedarf minus 10 Prozent,47.25,kWh/kg_H2,Methodische Sensitivität auf Basis von Brandt et al. (2024),90 Prozent des Basiswerts von 52.5 kWh/kg H2
+electrolyzer_energy_high,electrolyzer_specific_electricity_kwh_per_kg_h2,high,Elektrolyseur-Strombedarf plus 10 Prozent,57.75,kWh/kg_H2,Methodische Sensitivität auf Basis von Brandt et al. (2024),110 Prozent des Basiswerts von 52.5 kWh/kg H2
+wacc_low,uniform_real_wacc_fraction,low,Realer WACC 7 Prozent,0.07,fraction,Methodische Bandbreite um den Regionalproxy der Namibia-Fallstudie,Niedriger Finanzierungsfall
+wacc_high,uniform_real_wacc_fraction,high,Realer WACC 15 Prozent,0.15,fraction,Methodische Bandbreite um den Regionalproxy der Namibia-Fallstudie,Hoher Finanzierungsfall
+pv_capex_low,pv_capex_eur_per_kw,low,PV-CAPEX minus 25 Prozent,690.75,EUR_2023/kW,Methodische Sensitivität auf Basis von Brandt et al. (2024),75 Prozent des Basiswerts von 921 EUR/kW
+pv_capex_high,pv_capex_eur_per_kw,high,PV-CAPEX plus 25 Prozent,1151.25,EUR_2023/kW,Methodische Sensitivität auf Basis von Brandt et al. (2024),125 Prozent des Basiswerts von 921 EUR/kW
+wind_capex_quarter,wind_capex_eur_per_kw,exploratory,Wind-CAPEX 25 Prozent,444.875,EUR_2023/kW,Explorative Break-even-Analyse dieser Forschungsarbeit,Diagnosepunkt zur Ermittlung wann Wind in die kostenoptimale Lösung eintritt
+wind_capex_half,wind_capex_eur_per_kw,exploratory,Wind-CAPEX 50 Prozent,889.75,EUR_2023/kW,Explorative Break-even-Analyse dieser Forschungsarbeit,Diagnosepunkt zur Ermittlung wann Wind in die kostenoptimale Lösung eintritt
+wind_capex_high,wind_capex_eur_per_kw,high,Wind-CAPEX 150 Prozent,2669.25,EUR_2023/kW,Methodische Sensitivität auf Basis von Brandt et al. (2024),150 Prozent des Basiswerts von 1779.5 EUR/kW
+storage_capex_low,h2_storage_capex_eur_per_kg_h2,low,H2-Speicher-CAPEX minus 25 Prozent,550.125,EUR_2023/kg_H2,Methodische Sensitivität auf Basis von Brandt et al. (2024),75 Prozent des Basiswerts von 733.5 EUR/kg H2
+storage_capex_high,h2_storage_capex_eur_per_kg_h2,high,H2-Speicher-CAPEX plus 25 Prozent,916.875,EUR_2023/kg_H2,Methodische Sensitivität auf Basis von Brandt et al. (2024),125 Prozent des Basiswerts von 733.5 EUR/kg H2

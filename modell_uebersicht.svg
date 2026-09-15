@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1420" viewBox="0 0 2200 1420">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#334155"/>
+    </marker>
+    <marker id="arrow-muted" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#94a3b8"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.14"/>
+    </filter>
+    <style>
+      .title { font: 700 34px Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 400 18px Arial, sans-serif; fill: #475569; }
+      .section { font: 700 21px Arial, sans-serif; fill: #334155; }
+      .subsection { font: 700 17px Arial, sans-serif; fill: #475569; }
+      .box-title { font: 700 17px Arial, sans-serif; fill: #0f172a; }
+      .box-text { font: 400 14px Arial, sans-serif; fill: #334155; }
+      .small { font: 400 13px Arial, sans-serif; fill: #64748b; }
+      .tiny { font: 400 12px Arial, sans-serif; fill: #64748b; }
+      .arrow-label { font: 400 13px Arial, sans-serif; fill: #475569; }
+      .box { stroke-width: 2; rx: 12; filter: url(#shadow); }
+      .direct { fill: #dcfce7; stroke: #22c55e; }
+      .adapted { fill: #ffedd5; stroke: #f97316; }
+      .new { fill: #dbeafe; stroke: #3b82f6; }
+      .excluded { fill: #f1f5f9; stroke: #94a3b8; stroke-dasharray: 7 5; }
+      .output { fill: #ede9fe; stroke: #8b5cf6; }
+    </style>
+  </defs>
+
+  <rect width="2200" height="1420" fill="#f8fafc"/>
+  <text x="55" y="52" class="title">H₂-Modell: Herkunft der Bausteine und aktueller Datenfluss</text>
+  <text x="55" y="82" class="subtitle">Links: altes Ammoniakmodell als Quelle einzelner Methoden · Mitte: neuer H₂/RED-III-Lauf · Rechts: erzeugte Dateien</text>
+
+  <rect x="55" y="105" width="2090" height="72" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="75" y="133" class="subsection">Legende</text>
+  <rect x="175" y="116" width="22" height="22" class="direct"/>
+  <text x="207" y="133" class="box-text">direkt übernommen</text>
+  <rect x="385" y="116" width="22" height="22" class="adapted"/>
+  <text x="417" y="133" class="box-text">fachlich/technisch angepasst</text>
+  <rect x="670" y="116" width="22" height="22" class="new"/>
+  <text x="702" y="133" class="box-text">neu für H₂/RED-III</text>
+  <rect x="910" y="116" width="22" height="22" class="excluded"/>
+  <text x="942" y="133" class="box-text">bewusst ausgeschlossen</text>
+  <line x1="1225" y1="127" x2="1305" y2="127" stroke="#334155" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="1320" y="133" class="box-text">tatsächliche Laufzeit-Verbindung</text>
+  <line x1="1660" y1="127" x2="1740" y2="127" stroke="#94a3b8" stroke-width="2" stroke-dasharray="8 6" marker-end="url(#arrow-muted)"/>
+  <text x="1755" y="133" class="box-text">Herkunft/Übertragungsidee, kein alter Import</text>
+  <text x="75" y="160" class="tiny">Pfeile aus links zeigen, welche Idee oder Funktion als Vorlage diente. Der H₂-Lauf importiert nur die in der Mitte verbundenen Module.</text>
+
+  <rect x="35" y="205" width="585" height="1020" rx="16" fill="#eef2f7" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="60" y="242" class="section">A. Altes Ammoniakmodell</text>
+  <text x="60" y="270" class="small">Quelle für wiederverwendbare Methoden; diese Dateien laufen nicht als H₂-Hauptpfad.</text>
+
+  <rect x="60" y="300" width="535" height="120" class="box direct"/>
+  <text x="82" y="329" class="box-title">calculate_renewable_yield.py</text>
+  <text x="82" y="355" class="box-text">Direkt übernommener technischer Baustein:</text>
+  <text x="82" y="376" class="box-text">PVGIS-Wetterdaten, PV-Profil und Wind-Profil.</text>
+  <text x="82" y="401" class="small">Wird im H₂-Preprocessing gezielt aufgerufen.</text>
+
+  <rect x="60" y="440" width="535" height="155" class="box adapted"/>
+  <text x="82" y="469" class="box-title">energy_data_processor.py</text>
+  <text x="82" y="495" class="box-text">Nur ausgewählte Konzepte übernommen:</text>
+  <text x="82" y="516" class="box-text">• Länder-/Strompreis-Zuordnung als transparenter Proxy</text>
+  <text x="82" y="537" class="box-text">• WACC-Datenbank als dokumentierte Datenquelle</text>
+  <text x="82" y="564" class="box-text">Nicht übernommen: synthetische Altpreisprofile,</text>
+  <text x="82" y="584" class="box-text">LCA-Aufrufe und versteckte ghg_factors*.json.</text>
+
+  <rect x="60" y="615" width="535" height="140" class="box adapted"/>
+  <text x="82" y="644" class="box-title">config.py</text>
+  <text x="82" y="670" class="box-text">Als Vorlage für Einheiten, Zeitbasis und Kostenlogik:</text>
+  <text x="82" y="691" class="box-text">365 Tage, Stundenauflösung, Umrechnung MJ/kWh,</text>
+  <text x="82" y="712" class="box-text">Kapazitätsgrenzen und Kapitalrückgewinnung.</text>
+  <text x="82" y="736" class="small">Excel-Import, LCA-Setup und Ammoniakparameter entfallen.</text>
+
+  <rect x="60" y="775" width="535" height="170" class="box adapted"/>
+  <text x="82" y="804" class="box-title">opt_ammonia_functions.py</text>
+  <text x="82" y="830" class="box-text">Optimierungsstruktur als Vorlage:</text>
+  <text x="82" y="851" class="box-text">lineare Bilanzierung, Kapazitätsvariablen, CAPEX/OPEX,</text>
+  <text x="82" y="872" class="box-text">Kapitalrückgewinnungsfaktor und Gurobi/SciPy-Fallback.</text>
+  <text x="82" y="899" class="box-text">Entfernt: Haber-Bosch, ASU/Stickstoff, Ammoniakexport,</text>
+  <text x="82" y="920" class="box-text">Batterie- und binäre Anfahrlogik.</text>
+
+  <rect x="60" y="965" width="535" height="105" class="box adapted"/>
+  <text x="82" y="994" class="box-title">3_main_global_preprocess.py</text>
+  <text x="82" y="1020" class="box-text">Übernommen wurde nur die Idee der koordinierten</text>
+  <text x="82" y="1041" class="box-text">Standortvorbereitung; globaler Pixel-/xarray-Lauf entfällt.</text>
+
+  <rect x="60" y="1090" width="535" height="105" class="box excluded"/>
+  <text x="82" y="1119" class="box-title">4_main_global.py · 5_main_global_grid_connected.py</text>
+  <text x="82" y="1145" class="box-text">Globale Ammoniak-Szenarien, Stickstofffilter und</text>
+  <text x="82" y="1166" class="box-text">Parallelisierung werden im H₂-Pfad nicht verwendet.</text>
+  <text x="60" y="1210" class="tiny">create_db_lca_functions.py / Brightway-Premise und alte LCA-Datenbanken: ausgeschlossen.</text>
+
+  <path d="M595 360 C700 360 700 350 735 350" stroke="#22c55e" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <text x="625" y="342" class="arrow-label">Profile direkt</text>
+  <path d="M595 515 C680 515 680 305 735 305" stroke="#f97316" stroke-width="2" fill="none" stroke-dasharray="8 6" marker-end="url(#arrow-muted)"/>
+  <text x="625" y="460" class="arrow-label">Preisidee</text>
+  <path d="M595 685 C690 685 690 255 735 255" stroke="#f97316" stroke-width="2" fill="none" stroke-dasharray="8 6" marker-end="url(#arrow-muted)"/>
+  <text x="625" y="640" class="arrow-label">Konzept</text>
+  <path d="M595 850 C700 850 700 795 765 795" stroke="#f97316" stroke-width="2" fill="none" stroke-dasharray="8 6" marker-end="url(#arrow-muted)"/>
+  <text x="625" y="832" class="arrow-label">Solverstruktur</text>
+  <path d="M595 1015 C680 1015 680 495 1160 495" stroke="#f97316" stroke-width="2" fill="none" stroke-dasharray="8 6" marker-end="url(#arrow-muted)"/>
+  <text x="625" y="980" class="arrow-label">Koordinatenidee</text>
+
+  <rect x="735" y="205" width="805" height="1020" rx="16" fill="#ffffff" stroke="#93c5fd" stroke-width="2"/>
+  <text x="765" y="242" class="section">B. Neuer H₂-/RED-III-Pfad</text>
+  <text x="765" y="270" class="small">Blau = neu und eigenständig; orange = aus dem alten Modell abgeleitet.</text>
+
+  <rect x="765" y="300" width="345" height="125" class="box adapted"/>
+  <text x="787" y="329" class="box-title">config_h2.py</text>
+  <text x="787" y="355" class="box-text">Saubere H₂-Konfiguration mit</text>
+  <text x="787" y="376" class="box-text">Zeitbasis, Nachfrage, Kosten, WACC</text>
+  <text x="787" y="397" class="box-text">und Szenarien; kein Excel/LCA-Import.</text>
+
+  <rect x="1160" y="300" width="345" height="125" class="box adapted"/>
+  <text x="1182" y="329" class="box-title">prepare_single_site_h2_input.py</text>
+  <text x="1182" y="355" class="box-text">Koordinate → PVGIS-Profile, Land,</text>
+  <text x="1182" y="376" class="box-text">Preisproxy und Netz-Emissionsfaktor</text>
+  <text x="1182" y="397" class="box-text">→ validierte Eingabe-CSV + Metadaten.</text>
+
+  <rect x="765" y="485" width="345" height="125" class="box new"/>
+  <text x="787" y="514" class="box-title">h2_input_data.py</text>
+  <text x="787" y="540" class="box-text">Neue Eingabeprüfung: Spalten,</text>
+  <text x="787" y="561" class="box-text">Einheiten, UTC-Zeitreihe und</text>
+  <text x="787" y="582" class="box-text">8760-Stunden-Vollständigkeit.</text>
+
+  <rect x="1160" y="485" width="345" height="125" class="box new"/>
+  <text x="1182" y="514" class="box-title">run_single_site_h2.py</text>
+  <text x="1182" y="540" class="box-text">Einzellauf plus run_h2_scenarios.py:</text>
+  <text x="1182" y="561" class="box-text">gemeinsame Eingabe für S0, S1 und S2;</text>
+  <text x="1182" y="582" class="box-text">getrennte Ordner, CSV und Metadaten.</text>
+
+  <rect x="765" y="670" width="345" height="170" class="box adapted"/>
+  <text x="787" y="699" class="box-title">opt_hydrogen_functions.py</text>
+  <text x="787" y="725" class="box-text">H₂-only-Optimierung: PV, Wind,</text>
+  <text x="787" y="746" class="box-text">Elektrolyseur, Kompressor, Speicher,</text>
+  <text x="787" y="767" class="box-text">Netzbezug und kostenminimale LCOH.</text>
+  <text x="787" y="794" class="box-text">RED-III: Monats- und Stundenkorrelation</text>
+  <text x="787" y="815" class="box-text">und getrennte operative/regulatorische THG-Bilanz.</text>
+
+  <rect x="1160" y="670" width="345" height="170" class="box new"/>
+  <text x="1182" y="699" class="box-title">red_iii_data.py</text>
+  <text x="1182" y="725" class="box-text">Neue, unabhängige RED-III-Regeln:</text>
+  <text x="1182" y="746" class="box-text">GHG-Grenzwert, zeitliche Korrelation,</text>
+  <text x="1182" y="767" class="box-text">Zusätzlichkeit/Geografie als Nachweis</text>
+  <text x="1182" y="788" class="box-text">und Compliance-Diagnostik.</text>
+  <text x="1182" y="815" class="small">Nachweise bleiben getrennt vom Solver.</text>
+
+  <path d="M1110 362 H1160" stroke="#334155" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <text x="1115" y="348" class="arrow-label">Konfiguration</text>
+  <path d="M933 425 V485" stroke="#334155" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <text x="946" y="461" class="arrow-label">Eingabe</text>
+  <path d="M1333 425 V485" stroke="#334155" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <text x="1346" y="461" class="arrow-label">Profil/CSV</text>
+  <path d="M1110 547 H1160" stroke="#334155" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <text x="1115" y="533" class="arrow-label">validiert</text>
+  <path d="M1333 610 V670" stroke="#334155" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <text x="1347" y="646" class="arrow-label">Solveraufruf</text>
+  <path d="M1110 755 H1160" stroke="#334155" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <text x="1115" y="741" class="arrow-label">RED-Regeln</text>
+
+  <rect x="1575" y="205" width="590" height="1020" rx="16" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="2"/>
+  <text x="1605" y="242" class="section">C. Ergebnisse</text>
+  <text x="1605" y="270" class="small">Lokale Ausgaben des aktuellen Branches h2-single-site.</text>
+
+  <rect x="1605" y="330" width="530" height="115" class="box output"/>
+  <text x="1627" y="360" class="box-title">validated_input.csv</text>
+  <text x="1627" y="386" class="box-text">Prüfprotokoll und standardisierte</text>
+  <text x="1627" y="407" class="box-text">stündliche Standort-/Profil-Eingabe.</text>
+
+  <rect x="1605" y="475" width="530" height="135" class="box output"/>
+  <text x="1627" y="505" class="box-title">summary.csv</text>
+  <text x="1627" y="531" class="box-text">LCOH, Kosten, installierte Kapazitäten,</text>
+  <text x="1627" y="552" class="box-text">THG-Intensitäten, Grenzwert und RED-III-Modus.</text>
+  <text x="1627" y="578" class="small">Vergleich von reference, red_monthly, red_hourly und off_grid.</text>
+
+  <rect x="1605" y="640" width="530" height="135" class="box output"/>
+  <text x="1627" y="670" class="box-title">hourly_operation.csv</text>
+  <text x="1627" y="696" class="box-text">Stündliche Erzeugung, Eigenverbrauch,</text>
+  <text x="1627" y="717" class="box-text">Netzbezug, Elektrolyse, Speicher und THG je Stunde.</text>
+  <text x="1627" y="743" class="small">Trennt operative von regulatorisch angerechneten Emissionen.</text>
+
+  <rect x="1605" y="805" width="530" height="115" class="box output"/>
+  <text x="1627" y="835" class="box-title">run_metadata.json</text>
+  <text x="1627" y="861" class="box-text">Quellen, Systemgrenze, Solver, Zeitprüfung,</text>
+  <text x="1627" y="882" class="box-text">THG-Grenzwert und Modellversion.</text>
+
+  <rect x="1605" y="950" width="530" height="125" class="box output"/>
+  <text x="1627" y="980" class="box-title">Vergleichstabelle → plot_h2_results.py</text>
+  <text x="1627" y="1006" class="box-text">Sechs PNG: LCOH, Kapazitäten, Kosten, Betrieb,</text>
+  <text x="1627" y="1027" class="box-text">THG und Stundenverlauf + Quellenmanifest.</text>
+
+  <path d="M1505 547 C1550 547 1550 380 1605 380" stroke="#334155" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M1505 755 H1605" stroke="#334155" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <text x="1515" y="740" class="arrow-label">Ergebnisexport</text>
+  <path d="M1505 840 C1550 840 1550 700 1605 700" stroke="#334155" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M1870 920 V950" stroke="#334155" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+  <rect x="735" y="1100" width="1430" height="90" rx="12" fill="#fff7ed" stroke="#fb923c" stroke-width="2"/>
+  <text x="760" y="1130" class="subsection">Bewusste Modellgrenze der Forschungsarbeit</text>
+  <text x="760" y="1156" class="box-text">Ein Produktionsstandort wird über eine frei wählbare Koordinate demonstriert; dieselben Funktionen sind später für viele Einzelstandorte wiederverwendbar.</text>
+  <text x="760" y="1178" class="box-text">Ammoniak, Stickstoff/ASU, Haber-Bosch, alte LCA-Datenbanken und globale xarray-Pixel-Schleifen gehören nicht zum H₂-Kern.</text>
+
+  <text x="55" y="1300" class="section">Aktueller Stand</text>
+  <text x="55" y="1330" class="box-text">Schritte 1–13 umgesetzt · S0/S1/S2-Vergleich + sechs Ergebnisgrafiken · nächster Schritt: Sensitivitätsanalyse · Namibia: −21,0800° / 14,1610°</text>
+  <text x="55" y="1360" class="small">Alle Änderungen und Ergebnisdateien bleiben lokal im Branch; main und GitHub werden nicht verändert.</text>
+</svg>
