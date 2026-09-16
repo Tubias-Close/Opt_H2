@@ -78,34 +78,37 @@ Typical use case
 Run this script when you want to evaluate a large set of ammonia-production
 case studies over multiple countries, scenarios, and background databases.
 """
-import json
-import time
-import pickle
+
 import concurrent.futures
-import pandas as pd
+import json
+import pickle
+import time
+
 import bw2data
+import pandas as pd
+
+import calculate_renewable_yield as cry
+import energy_data_processor as ep
+import opt_ammonia_functions as opt
 
 # import own Python files, vars, mappings, and functions
 from config import (
-    NAME_REF_DB,
+    CC_METHOD,
     COST_DATA,
-    PROJECT_NAME,
-    NAME_FUTURE_DB,
-    FUTURE_POWER_PRICES,
-    LOCATIONS,
     FILE_PATH_CASE_STUDIES,
     FILE_PATH_CASE_STUDIES_LCA,
-    CC_METHOD,
+    FUTURE_POWER_PRICES,
+    LOCATIONS,
+    NAME_FUTURE_DB,
+    NAME_REF_DB,
+    PROJECT_NAME,
 )
-import calculate_renewable_yield as cry
-import opt_ammonia_functions as opt
-import energy_data_processor as ep
-from energy_data_processor import country_to_iso2
 from create_db_lca_functions import (
     build_mes_activity_dataset,
-    write_mes_activities_to_db,
     environmental_lca,
+    write_mes_activities_to_db,
 )
+from energy_data_processor import country_to_iso2
 from mapping import my_methods
 
 # -----------------------------
@@ -122,13 +125,13 @@ COST_DICT_FUTURE = COST_DATA[NAME_FUTURE_DB].to_dict()
 ALL_DBS = [NAME_REF_DB, NAME_FUTURE_DB]
 
 SCENARIOS = {
-    "grid_connected": {"autonomous_elect": False, "no_renewables": True},
-    "hybrid": {"autonomous_elect": False, "no_renewables": False},
-    "hybrid-green": {
-        "autonomous_elect": False,
-        "no_renewables": False,
-        "hybrid_green": True,
-    },
+    # "grid_connected": {"autonomous_elect": False, "no_renewables": True},
+    # "hybrid": {"autonomous_elect": False, "no_renewables": False},
+    # "hybrid-green": {
+    #    "autonomous_elect": False,
+    #    "no_renewables": False,
+    #    "hybrid_green": True,
+    # },
     "off_grid": {"autonomous_elect": True, "no_renewables": False},
 }
 
@@ -147,11 +150,14 @@ future_power_prices_df = pd.read_excel(
     index_col="country",
 )[["2 degree_2050"]]
 
-future_power_prices_df["iso2"] = future_power_prices_df.index.map(country_to_iso2)
+future_power_prices_df["iso2"] = future_power_prices_df.index.map(
+    country_to_iso2
+)
 future_power_prices_df.reset_index(inplace=True)
 future_power_prices_df = future_power_prices_df[["iso2", "2 degree_2050"]]
 future_power_prices_df.set_index("iso2", inplace=True)
 FUTURE_POWER_PRICES_DICT = future_power_prices_df["2 degree_2050"].to_dict()
+
 
 # -----------------------------
 # Worker
@@ -207,7 +213,9 @@ def run_single_case_ammonia(job):
         )
 
         # Grid GHG intensities
-        df_data["ghg_impact"] = ep.get_activity_env_elect_from_dict(iso2, db=db)
+        df_data["ghg_impact"] = ep.get_activity_env_elect_from_dict(
+            iso2, db=db
+        )
         df_data["ghg_impact_cons"] = 0
 
         # Run optimization only
@@ -274,9 +282,15 @@ def build_all_jobs(locations, scenarios, all_dbs):
 
     for db in all_dbs:
         for country, iso2, lat, lon in locations:
-            cost_dict = COST_DICT.copy() if db == NAME_REF_DB else COST_DICT_FUTURE.copy()
+            cost_dict = (
+                COST_DICT.copy()
+                if db == NAME_REF_DB
+                else COST_DICT_FUTURE.copy()
+            )
             dict_ghg_impacts = (
-                DICT_GHG_IMPACTS.copy() if db == NAME_REF_DB else DICT_GHG_IMPACTS_FUTURE.copy()
+                DICT_GHG_IMPACTS.copy()
+                if db == NAME_REF_DB
+                else DICT_GHG_IMPACTS_FUTURE.copy()
             )
 
             for scenario_name, kwargs in scenarios.items():
@@ -296,6 +310,7 @@ def build_all_jobs(locations, scenarios, all_dbs):
                 )
 
     return jobs
+
 
 # -----------------------------
 # Main
@@ -323,8 +338,12 @@ def main_parallel_ammonia(max_workers=4, locations_subset=None):
         all_run_meta = []
         finished = 0
 
-        with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
-            futures = [executor.submit(run_single_case_ammonia, job) for job in jobs]
+        with concurrent.futures.ProcessPoolExecutor(
+            max_workers=max_workers
+        ) as executor:
+            futures = [
+                executor.submit(run_single_case_ammonia, job) for job in jobs
+            ]
 
             for future in concurrent.futures.as_completed(futures):
                 res = future.result()
@@ -333,7 +352,9 @@ def main_parallel_ammonia(max_workers=4, locations_subset=None):
                 elapsed_time = time.time() - start_time
                 elapsed_minutes = elapsed_time / 60
                 avg_time_per_job = elapsed_time / finished
-                remaining_minutes = avg_time_per_job * (total_jobs - finished) / 60
+                remaining_minutes = (
+                    avg_time_per_job * (total_jobs - finished) / 60
+                )
 
                 print(
                     f"\rFinished {finished}/{total_jobs} | "
@@ -390,7 +411,9 @@ def main_parallel_ammonia(max_workers=4, locations_subset=None):
                 build_vars = opt_vars.copy()
                 build_vars["loc_elect"] = iso2
                 build_vars["sec_db"] = db_name
-                build_vars["credit_env_export"] = build_vars.get("credit_env_export", False)
+                build_vars["credit_env_export"] = build_vars.get(
+                    "credit_env_export", False
+                )
 
                 activity_code, dataset = build_mes_activity_dataset(
                     parm=parm,
@@ -426,7 +449,9 @@ def main_parallel_ammonia(max_workers=4, locations_subset=None):
 
         print()
         if not all_activity_datasets:
-            raise ValueError("No feasible cases found; nothing to write to the foreground DB.")
+            raise ValueError(
+                "No feasible cases found; nothing to write to the foreground DB."
+            )
 
         print("Writing Brightway foreground DB once...")
         write_mes_activities_to_db(
@@ -464,7 +489,9 @@ def main_parallel_ammonia(max_workers=4, locations_subset=None):
                 inplace=True,
             )
 
-            lca_results.rename(columns={lca_results.columns[0]: "results"}, inplace=True)
+            lca_results.rename(
+                columns={lca_results.columns[0]: "results"}, inplace=True
+            )
             all_totals_lca.append(lca_results)
 
             if i % 10 == 0 or i == len(all_run_meta):
@@ -492,6 +519,7 @@ def main_parallel_ammonia(max_workers=4, locations_subset=None):
             totals_cost_all_lca = pickle.load(file)
 
     return totals_cost_all, totals_cost_all_lca
+
 
 if __name__ == "__main__":
     totals_cost_all, totals_cost_all_lca = main_parallel_ammonia(
