@@ -1,0 +1,52 @@
+name: lcf_opt_TS
+
+channels:
+  - conda-forge
+  - gurobi
+
+dependencies:
+  # Runtime and optimization
+  - python=3.11
+  - pip
+  - gurobi=12.0
+
+  # Numerical and tabular data
+  - numpy=1.26
+  - pandas=2.2
+  - scipy=1.13
+  - xarray=2024.2
+  - h5py
+  - openpyxl
+  - xlsxwriter
+
+  # Renewable-energy calculations
+  - pvlib=0.10
+
+  # Geospatial processing and plotting
+  - geopandas=1.0
+  - cartopy=0.23
+  - shapely=2.0
+  - matplotlib=3.9
+  - seaborn=0.13
+
+  # Data retrieval and notebooks
+  - requests
+  - beautifulsoup4
+  - pycountry
+  - jupyterlab
+  - notebook
+  - ipykernel
+
+  # LCA helper used by the database-initialization workflow
+  - premise_gwp=0.9.6
+
+  # These versions reproduce the compatible Brightway/premise stack from
+  # the original environment without pinning all of their transitive packages.
+  - pip:
+      - bw-recipe-2016==0.4
+      - bw2analyzer==0.11.8
+      - bw2calc==2.4.0
+      - bw2data==4.6
+      - bw2io==0.9.14
+      - premise==2.3.9
+      - windpowerlib==0.2.2
