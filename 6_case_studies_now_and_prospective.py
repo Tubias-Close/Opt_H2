@@ -79,6 +79,10 @@ Run this script when you want to evaluate a large set of ammonia-production
 case studies over multiple countries, scenarios, and background databases.
 """
 
+import os
+
+os.environ["MKL_THREADING_LAYER"] = "SEQUENTIAL"
+
 import concurrent.futures
 import json
 import pickle
@@ -115,6 +119,10 @@ from mapping import my_methods
 # Global settings
 # -----------------------------
 bw2data.projects.set_current(PROJECT_NAME)
+
+missing = [method for method in my_methods if method not in bw2data.methods]
+if missing:
+    raise ValueError(f"LCIA methods missing from this project: {missing}")
 
 FOREGROUND_DB = "db_ammonia_system"
 GEN_RESULTS = True
