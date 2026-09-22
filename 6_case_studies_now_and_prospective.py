@@ -82,6 +82,8 @@ case studies over multiple countries, scenarios, and background databases.
 import os
 
 os.environ["MKL_THREADING_LAYER"] = "SEQUENTIAL"
+print(os.getcwd())
+print(os.path.exists("results"))
 
 import concurrent.futures
 import json
